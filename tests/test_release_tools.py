@@ -14,7 +14,9 @@ import zipfile
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from validate_release import PNG_SIGNATURE, REQUIRED_FILES, ValidationError, validate_archive, validate_release
+from validate_release import (
+    ARCHIVE_KINDS, ENGINE_DOCS, PNG_SIGNATURE, REQUIRED_FILES, ValidationError, validate_archive, validate_release,
+)
 from build_release import build_release
 
 
@@ -31,7 +33,16 @@ class ReleaseToolsTests(unittest.TestCase):
             self.temporary.cleanup()
         self.addCleanup(clean_fixture)
         self.root = Path(self.temporary.name)
-        self.files = sorted(REQUIRED_FILES | {"blender/lida_angel_toon/assets/sample.png"})
+        self.files = sorted(REQUIRED_FILES | {
+            "blender/lida_angel_toon/assets/sample.png",
+            "unity/jp.lida.angeltoon/Runtime/Shaders/Sample.shader",
+            "unity/jp.lida.angeltoon/Runtime/Shaders/Sample.shader.meta",
+            "unity/jp.lida.angeltoon/Runtime/Shaders/SampleCore.hlsl",
+            "unity/jp.lida.angeltoon/Editor/Sample.cs",
+            "unity/jp.lida.angeltoon/Editor/Sample.Editor.asmdef",
+            "unreal/LidaAngelToon/Source/hlsl/Sample_UECustom.txt",
+            "unreal/LidaAngelToon/Source/textures/sample.png",
+        })
         for relative in self.files:
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -44,12 +55,14 @@ class ReleaseToolsTests(unittest.TestCase):
         manifest.update(overrides)
         (self.root / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
-    def test_valid_tree_and_both_archives(self):
+    def test_valid_tree_and_all_archives(self):
         self.assertEqual(set(validate_release(self.root)), set(self.files))
         report = build_release(self.root)
+        self.assertEqual(set(report["archives"]), set(ARCHIVE_KINDS))
         for kind, item in report["archives"].items():
             validate_archive(self.root, self.root / "dist" / item["file"], kind)
         addon = self.root / "dist" / report["archives"]["addon"]["file"]
+        self.assertTrue(addon.name.endswith("-blender-addon.zip"))
         with zipfile.ZipFile(addon) as bundle:
             self.assertIn("lida_angel_toon/__init__.py", bundle.namelist())
             self.assertIn("lida_angel_toon/LICENSE", bundle.namelist())
@@ -57,6 +70,58 @@ class ReleaseToolsTests(unittest.TestCase):
             self.assertIn("lida_angel_toon/LICENSES/GPL-3.0-or-later.txt", bundle.namelist())
             self.assertIn("lida_angel_toon/LICENSES/Lida-Attribution-1.0.txt", bundle.namelist())
             self.assertNotIn("lida_angel_toon/tests/blender_smoke.py", bundle.namelist())
+            self.assertFalse(any("/unity/" in name or "/unreal/" in name for name in bundle.namelist()))
+        for kind, package_file in (
+            ("unity", "unity/jp.lida.angeltoon/package.json"),
+            ("unreal", "unreal/LidaAngelToon/Python/lidaangeltoon_ue_build.py"),
+        ):
+            with self.subTest(kind=kind):
+                archive = self.root / "dist" / report["archives"][kind]["file"]
+                prefix = f"LidaAngelToon-0.1.0-{kind}/"
+                with zipfile.ZipFile(archive) as bundle:
+                    names = set(bundle.namelist())
+                self.assertTrue(all(name.startswith(prefix) for name in names))
+                self.assertIn(prefix + package_file, names)
+                self.assertIn(prefix + f"{kind}/README.md", names)
+                for name in ("LICENSE", "NOTICE.md", "LICENSES/GPL-3.0-or-later.txt",
+                             "LICENSES/Lida-Attribution-1.0.txt", *ENGINE_DOCS):
+                    self.assertIn(prefix + name, names)
+                other = "unreal/" if kind == "unity" else "unity/"
+                self.assertFalse(any(name[len(prefix):].startswith((other, "blender/", "core/", "scripts/"))
+                                     for name in names))
+                self.assertNotIn(prefix + "README.md", names)
+
+    def test_unity_and_unreal_text_types_are_checked(self):
+        shader = self.root / "unity/jp.lida.angeltoon/Runtime/Shaders/Sample.shader"
+        shader.write_text("// shader\n" + "C" + ":/" + "Users/example/project\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValidationError, "Local absolute path"):
+            validate_release(self.root)
+        shader.write_text("// shader\n", encoding="utf-8")
+        (self.root / "unity/jp.lida.angeltoon/Editor/Sample.cs").write_bytes(b"\xff\xfe")
+        with self.assertRaisesRegex(ValidationError, "valid UTF-8"):
+            validate_release(self.root)
+
+    def test_engine_assets_and_projects_rejected(self):
+        for name in ("unreal/LidaAngelToon/Materials/M_Sample.uasset", "unity/jp.lida.angeltoon/Sample.mat",
+                     "unity/jp.lida.angeltoon/Sample.unitypackage", "unity/Sample.asset", "unreal/Sample.uproject"):
+            with self.subTest(name=name):
+                path = self.root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"engine asset fixture")
+                self.write_manifest(files=self.files + [name])
+                with self.assertRaisesRegex(ValidationError, "Forbidden asset"):
+                    validate_release(self.root)
+                path.unlink()
+        self.write_manifest()
+
+    def test_invalid_components_rejected(self):
+        for components in ({"godot": "0.1.0"}, {"unity": "first"}, ["blender"]):
+            with self.subTest(components=components):
+                self.write_manifest(components=components)
+                with self.assertRaisesRegex(ValidationError, "components"):
+                    validate_release(self.root)
+        self.write_manifest(components={"blender": "0.1.0", "unity": "0.1.0", "unreal": "0.1.0"})
+        validate_release(self.root)
 
     def test_missing_declared_file(self):
         (self.root / "docs/SUPPORT.md").unlink()
