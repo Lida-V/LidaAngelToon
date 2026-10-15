@@ -1,0 +1,3 @@
+# Optional: only needed to regenerate procedural textures.
+numpy>=2.0,<3
+Pillow>=10.4,<13

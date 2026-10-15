@@ -1,0 +1,14 @@
+LidaAngelToon license map
+Copyright (c) 2026 Lida
+
+Blender addon and Python scripts using bpy: GPL-3.0-or-later.
+See LICENSES/GPL-3.0-or-later.txt and per-file SPDX identifiers.
+
+Original documentation, procedural PNG assets, presets and standalone tooling
+without another SPDX identifier: Lida Attribution License 1.0.
+See LICENSES/Lida-Attribution-1.0.txt.
+
+Keep author notices and applicable license texts when redistributing source.
+Models and rendered images produced with the shader do not require a credit
+under these project terms merely because the shader was used.
+No character model, reference dance FBX, or third-party asset is licensed here.
