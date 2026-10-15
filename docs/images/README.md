@@ -1,13 +1,15 @@
 <!-- SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0 -->
 # READMEの画像と描画条件
 
+このページは原始図形のプリセット一覧と入力比較の2枚を説明します。リダ実モデルのBlender・Unity・UE画像は[実モデルの画像条件](engine-models.md)へ分けています。
+
 Copyright (c) 2026 Lida。出典：[LidaAngelToon](https://github.com/Lida-V/LidaAngelToon)。画像だけが再配布された場合も作者と配布元を確認できるよう、掲載PNGの下部にLida名と出典URLを表示しています。利用条件は[LICENSE](../../LICENSE)と[NOTICE](../../NOTICE.md)に従います。
 
 ## 画像の出所
 
 公開版0.1.0のアドオンを、新規作成したUV球へ適用した実レンダーです。AI生成イラストや完成予想図ではありません。外部モデル・制作中のキャラクター・購入素材は読み込んでいません。背景・文字・カード・出典表示を加えた掲載資料で、シェーダーの描画へ加筆はしていません。
 
-- [プリセットの表示例](preset-gallery.png)：1800×1360、代表8種。FaceとMouthを含む全10種の用途は[README](../../README.md#10種類のプリセット)を参照。
+- [プリセットの表示例](preset-gallery.png)：1800×1360、代表8種。FaceとMouthを含む全10種の案内は[README](../../README.md#blenderアドオンのプリセット例)を参照。
 - [入力値の比較](feature-controls.png)：1800×1710。各行で左右の1入力だけを変えています。別の行同士は比較条件が違います。
 
 使用した公開コード：[mainの元版](https://github.com/Lida-V/LidaAngelToon/tree/87c04f00626a5cd6261aff7ce28cc696f91b9c64)。描画に使うアドオンと手続き画像はこの版から変更していません。PNGの説明用画像は今回の文書更新で追加したもので、既存v0.1.0のRelease資産を置き換えたものではありません。
