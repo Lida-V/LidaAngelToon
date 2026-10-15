@@ -1,0 +1,8 @@
+// LidaAngelToon - Unreal Engine Custom node body (small helper, written by lidaangeltoon_ue_build.py).
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// Copyright (c) 2026 Lida
+// LidaAngelToon: alpha for Masked instances. Dither = 1: keep a pixel when alpha > per-frame noise (TSR averages it,
+// like Blender "Dithered"); Dither = 0: plain cut-out at Cutoff.
+float n = InterleavedGradientNoise(Parameters.SvPosition.xy, ResolvedView.StateFrameIndexMod8);
+float t = (Dither > 0.5) ? n : Cutoff;
+return (Alpha > t) ? 1.0 : 0.0;

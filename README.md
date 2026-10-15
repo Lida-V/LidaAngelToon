@@ -1,75 +1,98 @@
 # LidaAngelToon
 
-**やわらかい影と、髪・布・金属などの描き分けを、Blender EEVEEで。**
-LidaAngelToon 0.1.0は、明るい部分と2段の影をなめらかにつなぐトゥーンシェーダーです。10種類のプリセットから材質に合うものを選び、光沢や影の色を調整できます。
+**やわらかい影と、髪・布・金属の描き分けを、Blender・Unity・Unreal Engineで。**
 
-![代表プリセット8種を原始図形に適用した実レンダー](docs/images/preset-gallery.png)
+明るい部分と2段の影をなめらかにつなぐトゥーンシェーダーです。肌の明暗境界、髪の帯状の光沢、白い衣装の明るさ、素材ごとのつやを調整できます。
 
-上図は公開版0.1.0を同じUV球へ適用した、代表8種の実レンダーです。基本色は表示例で、照明・カメラは共通、AO・輪郭線は使っていません。人物モデルの完成例ではなく、素材の見え方を確かめる資料です。色・形・照明によって見え方は変わります。詳しい条件は[画像資料](docs/images/README.md)を参照してください。
+## リダのモデルで見る3つの表示例
 
-**[インストール用ZIPを取得](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.1.0/lida_angel_toon-0.1.0-addon.zip)** · [Release 0.1.0](https://github.com/Lida-V/LidaAngelToon/releases/tag/v0.1.0) · [詳しい導入手順](docs/INSTALL.md)
+![リダの実モデルをBlender制作基準・Unity URP・Unreal Engineで表示した例](docs/images/engine-model-gallery.png)
 
-対応は **Blender 5.2.1 LTS / EEVEE**。モデル本体は含みません。
+![リダの顔を3つの環境で表示した拡大比較](docs/images/engine-face-comparison.png)
 
-## 初めて使う
+生成イラストではなく、各環境で実際に描画した画像です。**Blender列は制作に使った開発基準の`LidaSoftToon`で、配布アドオンをモデルへ適用した画像ではありません。** UnityとUEはこの制作基準に合わせて実装しました。画像の入力版・画角・光・色設定は[実モデル画像の条件](docs/images/engine-models.md)へまとめています。
 
-1. 上のリンクから `lida_angel_toon-0.1.0-addon.zip` を取得します。ソースZIPは開発者向けです。
-2. Blenderの「編集 → プリファレンス → アドオン → ディスクからインストール」で、そのZIPを展開せずに選びます。LidaAngelToonを有効にします。
-3. レンダーエンジンを **EEVEE** にします。まず球を1つ追加し、3Dビューで `N` キーを押して **LidaAngelToon** を開きます。
-4. `Cloth`を選び、`Apply to selected meshes`を押します。「レンダー」表示にすると見えます。Sunがなければ1個作ります。
+各環境向けに材質と画像を設定した制作例です。初期値のまま同じ外観になることや、3環境で全画素が一致することを示すものではありません。キャラクターモデル・専用の材質表・専用画像は配布に含みません。
 
-Principled BSDFから出力する基本的な材質を対象に、既存の基本色や画像の接続を引き継ぎます。各選択メッシュの**アクティブ材質だけ**が対象なので、複数の材質があるモデルは材質ごとに選んで適用します。材質名や形状から肌・顔・髪を自動判定する機能はありません。
+## 使う環境を選ぶ
 
-元のノードは残し、`Restore original material`で元の出力へ戻せます。生成済みのノードや画像などは残るため、適用前のファイルも保存してください。
+**[Release 0.2.0](https://github.com/Lida-V/LidaAngelToon/releases/tag/v0.2.0)** から取得できます。リポジトリの配布版は0.2.0、Blenderアドオン・Unityパッケージ・UE用ファイルはそれぞれ0.1.0です。
 
-詳しい導入・更新：[INSTALL](docs/INSTALL.md)。対応と制限：[SUPPORT](docs/SUPPORT.md)。
-実際に確認した範囲：[VALIDATION](docs/VALIDATION.md)。
+| 環境 | 導入用ZIP | 最初に読むもの |
+|---|---|---|
+| Blender 5.2.1 LTS / EEVEE | [Blenderアドオン](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-blender-addon.zip) | [インストール](docs/INSTALL.md) |
+| Unity 6 / URP 17 | [Unityパッケージ](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-unity.zip) | [Unityの導入](unity/README.md) |
+| Unreal Engine 5 | [UE用ファイル](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-unreal.zip) | [UEの導入](unreal/README.md) |
+| 開発者 | [全ソース](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-source.zip) | [仕様](docs/SPEC.ja.md) |
 
-## 見た目をどう整えられるか
+**ソースZIP全体をBlenderへインストールしないでください。** Blenderは上表のアドオンZIP、UnityとUEはそれぞれのZIPを選びます。UE版はPythonで材質などを作る構成で、`.uasset`の配布ではありません。VRM自動変換は収録していません。
 
-- **影をやわらかくする**：影の境目・幅・色を調整し、肌や布の丸みを見せます。
-- **素材ごとにつやを変える**：髪の輪状の光沢、金属・宝石・目の光沢などをMatCap画像で表現します。自作MatCap5枚を収録しています。
-- **肌の印象を整える**：明暗の境目の色味を整え、基本色の明るさや彩度も調整できます。
-- **縁や明るさを整える**：縁の光、小さなつや、白い部分の明るさをなだらかに抑える`Highlight Knee`、任意の輪郭線を使えます。
-- **必要な箇所へ補助情報を足す**：利用者が用意したAO属性や、付属の毛筋マスクを使えます。髪の毛筋は**UVが必要**で、UVのV方向を髪の長さ方向へ合わせます。
+## 見た目の特徴
 
-![シェーダーの項目を変えたときの見た目の比較](docs/images/feature-controls.png)
+- **影の境界を調整**：影の位置・幅・色を変え、丸みを残したやわらかい明暗にできます。
+- **素材ごとの光沢**：MatCap、縁の光、小さなつやで髪・布・金属・宝石風の見た目を作ります。MatCapは見る方向に応じた反射模様で、実物の金属反射や透過・屈折の物理計算ではありません。
+- **肌の色を整える**：明暗の境目の色、基本色の明るさと彩度を調整できます。
+- **白い光沢をなだらかに圧縮**：`Highlight Knee`で明るすぎる値を1へ寄せ、白い素材の色を保ちやすくします。
+- **任意のAOと輪郭線**：用意した奥の暗さを入力し、反転ハル方式の輪郭線を使えます。Unity・UEは画面上の幅を基準にした輪郭線と、マスク・2層の材質に対応します。
 
-上から、影のやわらかさ（`Shade Soft 1`）、髪のMatCapの強さ（`MatCap Add Strength`）、明るい白の圧縮（`Highlight Knee`）の比較です。各行の左右は形・色・照明・カメラを揃え、1項目だけを変えています。3段目は効果を見せるため、左右とも同じ強い光沢を加えた例です。値と描画条件は[画像資料](docs/images/README.md)に記載しています。
+### Blenderアドオンのプリセット例
 
-MatCapは、見る方向に応じた画像でつやを加える表現です。金属や宝石のプリセットも、この方法でそれらしい見た目を作ります。実物の金属の反射計算や、宝石内部の透過・屈折を再現する機能ではありません。
+![公開アドオン0.1.0を同じUV球へ適用した代表8プリセット](docs/images/preset-gallery.png)
 
-## 10種類のプリセット
+同じUV球へ公開アドオンを実適用した例です。基本色は表示例で、照明・カメラは共通。モデル画像とは材質と条件が異なります。アドオンには`Cloth`、`Skin`、`Face`、`Hair`、`Metal`、`Gem`、`Eye`、`Nail`、`Feather`、`Mouth`の10プリセットがあります。部位や材質名の自動判定は行いません。
 
-プリセットは仕上がりを調整する出発点です。対象の部位を自分で選び、基本色・テクスチャ・照明と合わせて使います。
+![影境界・髪のMatCap・Highlight Kneeの1入力ごとの比較](docs/images/feature-controls.png)
 
-| パネルの名前 | 向いている箇所・見た目 |
-|---|---|
-| `Cloth` | 服や布。控えめなつやとやわらかい影 |
-| `Skin` | 身体の肌。暖かい影と明暗の境目の色 |
-| `Face` | 顔の肌。控えめな縁の光と、明るい基本色 |
-| `Hair` | 髪。輪状の光沢。毛筋マスクは任意で追加 |
-| `Metal` | 金属の装飾。MatCapによる明暗と小さなつや |
-| `Gem` | 宝石風の装飾。明るい光沢と縁の光 |
-| `Eye` | 目。影を控え、基本色と光沢を見せる |
-| `Nail` | 爪。暖かい色の影と小さなつや |
-| `Feather` | 羽。薄い色の影と控えめな縁の光 |
-| `Mouth` | 口内など。赤みのある影と控えめな明暗 |
+上から影の境界幅、髪のMatCapの強さ、光沢を圧縮し始める明るさを比較しています。各行は同じ球・基本色・光・カメラで、左右の1入力だけを変えています。3行目は両方へ同じ強い光沢を加えた例です。[数値と画像条件](docs/images/README.md)。
 
-材質の細かな値はShader Editorの`LidaAngelToon`ノードで調整します。**プリセットを再適用すると、手動で調整したノードの値を上書きします。** 調整値を控えてから再適用してください。各操作の説明は[導入と更新](docs/INSTALL.md)、困ったときは[対応範囲と確認方法](docs/SUPPORT.md)を参照してください。
+## 最初の導入
 
-## 対応範囲
+### Blender
 
-**Blender 5.2.1 LTS / EEVEEで検証済み。** Cycles、他のBlender版、Unity、Unreal Engineは未対応・未検証です。Unity/UE実装やVRMへの自動変換は収録していません。Blenderで表示できることは、別の使用先で同じ見た目になる保証ではありません。
+1. アドオンZIPを展開せず、「編集 → プリファレンス → アドオン → ディスクからインストール」で選び、有効にします。
+2. EEVEEにして球を追加し、3Dビューの`N`からLidaAngelToonを開きます。
+3. `Cloth` → `Apply to selected meshes`を選び、レンダー表示で確認します。Sunがなければ追加します。
 
-ランタイムに外部Pythonパッケージは不要です。AOは任意で、未指定なら1（奥の暗さなし）。顔の形や髪の頭頂を自動検出する処理はありません。形状・骨・ウェイト・表情は変更しません。輪郭線を選んだ場合のみSolidifyモディファイアと材質スロットを追加します。
+単純なPrincipled BSDFの基本色・画像接続を引き継ぎ、各選択メッシュの**アクティブ材質だけ**を変更します。元のノードは残し、`Restore original material`で元の出力へ戻せます。適用前のファイルも保存してください。プリセットを再適用すると手動の値は上書きされます。毛筋マスクにはUVが必要です。[詳細と制限](docs/SUPPORT.md)。
+
+### Unity
+
+1. `unity/jp.lida.angeltoon`を`.meta`ごとURPプロジェクトの`Packages/`へ置くか、Package ManagerのAdd package from diskで`package.json`を選びます。
+2. `LidaAngelToon/Toon`の材質を作り、Base MapとBase Colorを設定します。
+3. 必要ならマスクをsRGB OFFで取り込み、Use Mask Textureを有効にします。主光はURPのMain Light、固定光は`AngelToonGlobals`で指定します。
+
+輪郭線は初期状態で有効です。切り抜き・なめらかな輪郭法線・半透明の注意は[Unityの説明](unity/README.md)を参照してください。
+
+### Unreal Engine
+
+1. `unreal/LidaAngelToon`をプロジェクトの`Content/LidaAngelToon`へ配置します。
+2. Python Editor Script Pluginを有効にして`Python/lidaangeltoon_ue_build.py`を実行し、材質・MPC・主光のBlueprint・既定画像を作ります。
+3. Material Instanceを作り、Directional Lightと`BP_LidaAngelToonKeyLight`を配置します。輪郭線は同じメッシュへ輪郭用材質を使う別コンポーネントで描きます。
+
+**UE版は落ち影を受けません。** 導入・輪郭の追従・Lumenへの影響は[UEの説明](unreal/README.md)、露出は[色とトーンマップ](docs/COLOR-AND-TONEMAP.md)を参照してください。
+
+## 確認した環境と制限
+
+| 実装 | 確認した環境 | 確認の範囲 |
+|---|---|---|
+| Blenderアドオン | Blender 5.2.1 LTS / EEVEE / Windows | 原始図形で適用・復帰・描画・保存再読込・ZIP導入。実モデル画像は開発基準の材質で別確認 |
+| Unity | Unity 6000.6.0f1 / URP 17.6 / Linear / Forward+ / D3D11 / Windows | 球・板・顔・全身の実表示と制作基準との比較。ほかのAPI/OSは未検証 |
+| Unreal Engine | UE 5.8 / Windows | 球・板・顔・全身の実表示と制作基準との比較。UE材質はUnlitで落ち影なし |
+
+UnityとUEは共通の`core/LidaAngelToonCore.hlsl`を使います。Blenderアドオンは同じ38入力名を持ちますが既定値が異なり、アドオン出力と共通HLSLの数値一致は未検証です。[対応表](docs/BLENDER-NODE-MAPPING.md)。
+
+1つのRenderer／スケルタルメッシュ内の半透明が重なると、描画順に問題が出る場合があります。切り抜き、輪郭法線、光、トーンマップも使用先で確認してください。Cycles、他のBlender版、未記載の環境での再現は保証しません。[Blender検証](docs/VALIDATION.md) · [共通仕様](docs/SPEC.ja.md)。
 
 ## 配布条件と出典
 
-[LICENSE](LICENSE)が適用範囲の案内、[NOTICE](NOTICE.md)が出典情報です。
-Blenderアドオン／bpyを使うテストは **GPL-3.0-or-later**。自作画像・文書・Blenderに依存しない生成器は、同梱の **Lida Attribution License 1.0** が対象です。ファイルのSPDX表示も確認してください。
+[LICENSE](LICENSE)が適用範囲、[NOTICE](NOTICE.md)が出典の案内です。**商用利用・改変・作品への組み込み・再配布は可能です。**
 
-通常の描画画像や、シェーダーで作ったモデル成果へのクレジットは不要です。アプリ、配布コード、派生Skillsへ本資料やコードを組み込んで公開する際は、LICENSEとNOTICEの出典情報を残してください。GPL部分には独自ライセンスの追加制限を課しません。GPLのアドオンを使用しただけで、モデルや描画成果がGPLになるわけではありません。
+- bpyを使うBlenderアドオンとテスト：**GPL-3.0-or-later**。
+- Unity・UE・共通HLSL・その他の文書や画像：**Lida Attribution License 1.0**。各ファイルのSPDXも確認してください。
+
+アプリ・ゲーム・アバターへコードを組み込んで配布するときは、Lida名・出典URL・ライセンスを保持し、主な改変を記載します。UnityパッケージとUEフォルダ内の`LICENSE.md`に全文と出典があります。GPL部分へ独自の追加制限は課しません。通常の描画画像・動画や、シェーダーを使って作ったモデル成果だけならクレジットは不要です。
+
+紹介画像には資料単体でも出所が分かるよう、© 2026 Lidaと配布元URLを表示しています。モデルデータやキャラクターデザインの利用許可は本配布に含みません。
 
 ## 開発者向け
 
@@ -79,14 +102,16 @@ python scripts/validate_release.py
 python scripts/build_release.py
 ```
 
-配布ZIPは `dist/` へ作成します。`manifest.json` のallowlistだけを梱包し、モデル・FBX・VRM・参考モーション・外部素材を拒否します。依存ライブラリを同梱しません。
+`manifest.json`の許可一覧だけを梱包し、`dist/`へsource・blender-addon・unity・unrealの4 ZIPとSHA256SUMSを作成します。モデル・FBX・VRM・UEの`.uasset`・Unityの場面や材質ファイルは収録しません。コードの構成は[core](core/README.md)、Blender画像の生成は[手続き画像生成器](tools/generate_textures.py)を参照してください。
 
-手続き画像を再生成する場合だけ `python -m pip install -r requirements-dev.txt`、続いて `python tools/generate_textures.py` を実行します。
+共通コアの3つの写しとUE Customノードの生成結果、Unityの`.meta`、SPDX、ASCIIコード、ZIP内の相対リンクは既存テストで照合します。共通コア変更後のUEテキスト生成：
 
-Blender本体で原始図形の描画・保存・再読込を確認する例：
+```text
+python -I core/scripts/make_ue_custom338.py . unreal/LidaAngelToon/Source/hlsl dist/ue_custom_check.hlsl
+```
+
+原始図形だけでアドオンを試す場合：
 
 ```text
 blender --background --factory-startup --python tests/blender_smoke.py -- --output dist/smoke
 ```
-
-検査は任意のモデルを開かず、球と自作テクスチャだけで行います。検査用blendと中間PNGは公開ZIPに含めません。README掲載用の比較画像は`docs/images/`に置いています。

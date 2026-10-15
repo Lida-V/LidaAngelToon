@@ -20,26 +20,54 @@ PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 PACKAGE = "lida_angel_toon"
 ADDON_PREFIX = f"blender/{PACKAGE}/"
 LICENSE_PREFIX = "LICENSES/"
+NOTICE_FILES = ("LICENSE", "NOTICE.md")
+# Unity / Unreal Engine release ZIPs: the platform folder, the shared engine documents and the license files,
+# at the same relative paths as in the repository (so the relative links of the documents keep working).
+ENGINE_ARCHIVE_PREFIXES = {"unity": "unity/", "unreal": "unreal/"}
+ENGINE_DOCS = (
+    "docs/SPEC.md", "docs/SPEC.ja.md", "docs/BLENDER-NODE-MAPPING.md",
+    "docs/OUTLINE-RULE-B.md", "docs/COLOR-AND-TONEMAP.md",
+)
+ARCHIVE_KINDS = ("source", "addon", "unity", "unreal")
+ARCHIVE_FILE_NAMES = {
+    "source": "{name}-{version}-source.zip",
+    "addon": "{name}-{version}-blender-addon.zip",
+    "unity": "{name}-{version}-unity.zip",
+    "unreal": "{name}-{version}-unreal.zip",
+}
+COMPONENTS = frozenset({"blender", "unity", "unreal"})
 REQUIRED_FILES = frozenset({
-    "VERSION", "README.md", "LICENSE", "NOTICE.md", "AGENTS.md",
+    "VERSION", "README.md", "LICENSE", "NOTICE.md", "AGENTS.md", "CHANGELOG.md",
     "requirements-dev.txt", "manifest.json", ".gitignore",
     ".github/workflows/validate.yml", "docs/INSTALL.md", "docs/SUPPORT.md",
     "blender/lida_angel_toon/__init__.py",
     "blender/lida_angel_toon/shader.py",
     "blender/lida_angel_toon/presets.py", "tools/generate_textures.py",
     "scripts/validate_release.py", "scripts/build_release.py",
-    "tests/test_release_tools.py", "tests/blender_smoke.py",
+    "tests/test_release_tools.py", "tests/test_repository_consistency.py",
+    "tests/blender_smoke.py",
     "LICENSES/GPL-3.0-or-later.txt",
     "LICENSES/Lida-Attribution-1.0.txt",
+    "core/LidaAngelToonCore.hlsl",
+    "unity/README.md", "unity/jp.lida.angeltoon/package.json",
+    "unity/jp.lida.angeltoon/LICENSE.md",
+    "unreal/README.md", "unreal/LidaAngelToon/LICENSE.md",
+    "unreal/LidaAngelToon/Python/lidaangeltoon_ue_build.py",
+    *ENGINE_DOCS,
 })
-TEXT_SUFFIXES = {".md", ".txt", ".json", ".py", ".yml", ".yaml"}
+TEXT_SUFFIXES = {
+    ".md", ".txt", ".json", ".py", ".yml", ".yaml",
+    ".shader", ".hlsl", ".cs", ".asmdef", ".meta",
+}
 SPECIAL_TEXT_FILES = {"VERSION", "LICENSE", ".gitignore"}
 FORBIDDEN_SUFFIXES = {
     ".blend", ".blend1", ".fbx", ".vrm", ".glb", ".gltf", ".obj",
     ".mtl", ".stl", ".abc", ".usd", ".usda", ".usdc", ".usdz",
-    ".unity", ".unitypackage", ".uasset", ".umap", ".dll", ".exe",
-    ".zip", ".7z", ".rar", ".pem", ".key", ".pfx", ".p12",
+    ".unity", ".unitypackage", ".uasset", ".umap", ".uproject", ".dll", ".exe",
+    ".asset", ".mat", ".prefab", ".anim", ".controller",
+    ".zip", ".7z", ".rar", ".tgz", ".tar", ".gz", ".pem", ".key", ".pfx", ".p12",
 }
+SEMVER = re.compile(r"\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?")
 LOCAL_PATH = re.compile(
     r"(?i)(?:\b[a-z]:[\\/]|file:/{2}|/(?:users|home)/[^\s<>\"']+)"
 )
@@ -96,8 +124,14 @@ def _load_manifest(root: Path) -> dict:
     if manifest.get("name") != "LidaAngelToon":
         raise ValidationError("Manifest name must be LidaAngelToon")
     version = manifest.get("version")
-    if not isinstance(version, str) or not re.fullmatch(r"\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?", version):
+    if not isinstance(version, str) or not SEMVER.fullmatch(version):
         raise ValidationError("Manifest version must be a semantic version")
+    components = manifest.get("components", {})
+    if (
+        not isinstance(components, dict) or not set(components) <= COMPONENTS
+        or not all(isinstance(value, str) and SEMVER.fullmatch(value) for value in components.values())
+    ):
+        raise ValidationError("Manifest components must map blender/unity/unreal to semantic versions")
     if not isinstance(manifest.get("files"), list) or not manifest["files"]:
         raise ValidationError("Manifest files must be a nonempty list")
     paths = [_safe_relative(value) for value in manifest["files"]]
@@ -202,22 +236,38 @@ def validate_release(root: Path | str) -> dict[str, str]:
     return hashes
 
 
+def archive_file_name(manifest: dict, kind: str) -> str:
+    if kind not in ARCHIVE_FILE_NAMES:
+        raise ValidationError("Archive kind must be one of: " + ", ".join(ARCHIVE_KINDS))
+    return ARCHIVE_FILE_NAMES[kind].format(name=manifest["name"], version=manifest["version"])
+
+
+def archive_members(manifest: dict, names, kind: str) -> dict[str, str]:
+    """Map each archive member path to the declared source file it is copied from."""
+    names = sorted(names)
+    notices = [name for name in names if name in NOTICE_FILES or name.startswith(LICENSE_PREFIX)]
+    if kind == "source":
+        prefix = f"{manifest['name']}-{manifest['version']}/"
+        return {prefix + name: name for name in names}
+    if kind == "addon":
+        members = {f"{PACKAGE}/" + name[len(ADDON_PREFIX):]: name for name in names if name.startswith(ADDON_PREFIX)}
+        members.update({f"{PACKAGE}/{name}": name for name in notices})
+        return members
+    if kind in ENGINE_ARCHIVE_PREFIXES:
+        platform = [name for name in names if name.startswith(ENGINE_ARCHIVE_PREFIXES[kind])]
+        if not platform:
+            raise ValidationError(f"No {kind} files to package")
+        prefix = f"{manifest['name']}-{manifest['version']}-{kind}/"
+        selected = platform + [name for name in names if name in ENGINE_DOCS] + notices
+        return {prefix + name: name for name in selected}
+    raise ValidationError("Archive kind must be one of: " + ", ".join(ARCHIVE_KINDS))
+
+
 def expected_archive_files(root: Path | str, kind: str, hashes: dict[str, str] | None = None) -> dict[str, str]:
     root = Path(root).resolve()
     hashes = validate_release(root) if hashes is None else hashes
     manifest = _load_manifest(root)
-    if kind == "source":
-        prefix = f"{manifest['name']}-{manifest['version']}/"
-        return {prefix + name: digest for name, digest in hashes.items()}
-    if kind == "addon":
-        expected = {
-            f"{PACKAGE}/" + name[len(ADDON_PREFIX):]: digest
-            for name, digest in hashes.items() if name.startswith(ADDON_PREFIX)
-        }
-        expected.update({f"{PACKAGE}/{name}": hashes[name] for name in ("LICENSE", "NOTICE.md")})
-        expected.update({f"{PACKAGE}/{name}": digest for name, digest in hashes.items() if name.startswith(LICENSE_PREFIX)})
-        return expected
-    raise ValidationError("Archive kind must be source or addon")
+    return {member: hashes[source] for member, source in archive_members(manifest, hashes, kind).items()}
 
 
 def _validate_zip(archive: Path | str, expected: dict[str, str]) -> None:
@@ -249,7 +299,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--zip", type=Path, dest="archive")
-    parser.add_argument("--kind", choices=("source", "addon"))
+    parser.add_argument("--kind", choices=ARCHIVE_KINDS)
     args = parser.parse_args(argv)
     if args.archive is not None and args.kind is None:
         parser.error("--zip requires --kind")

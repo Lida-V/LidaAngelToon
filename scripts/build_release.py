@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
-"""Build deterministic, validated source and Blender install ZIPs in dist/."""
+"""Build deterministic, validated release ZIPs in dist/: source, Blender add-on, Unity and Unreal Engine."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ import zipfile
 
 sys.dont_write_bytecode = True
 from validate_release import (  # noqa: E402
-    ADDON_PREFIX, LICENSE_PREFIX, PACKAGE, ValidationError, _is_link, _load_manifest, _validate_zip,
+    ARCHIVE_KINDS, ValidationError, _is_link, _load_manifest, _validate_zip, archive_file_name, archive_members,
     expected_archive_files, sha256, validate_release,
 )
 
@@ -61,23 +61,14 @@ def build_release(root: Path | str) -> dict:
     output.mkdir(exist_ok=True)
     if output.resolve().parent != root:
         raise ValidationError("dist must resolve inside the source root")
-    prefix = f"{manifest['name']}-{manifest['version']}/"
-    source_entries = {prefix + name: data for name, data in contents.items()}
-    addon_entries = {
-        f"{PACKAGE}/" + name[len(ADDON_PREFIX):]: data
-        for name, data in contents.items() if name.startswith(ADDON_PREFIX)
-    }
-    addon_entries.update({f"{PACKAGE}/{name}": contents[name] for name in ("LICENSE", "NOTICE.md")})
-    addon_entries.update({f"{PACKAGE}/{name}": data for name, data in contents.items() if name.startswith(LICENSE_PREFIX)})
-    names = {
-        "source": f"LidaAngelToon-{manifest['version']}-source.zip",
-        "addon": f"lida_angel_toon-{manifest['version']}-addon.zip",
-    }
+    names = {kind: archive_file_name(manifest, kind) for kind in ARCHIVE_KINDS}
     report = {
         "schema_version": 1, "name": manifest["name"], "version": manifest["version"],
+        "components": dict(sorted(manifest.get("components", {}).items())),
         "archives": {}, "source_files": dict(sorted(hashes.items())),
     }
-    for kind, entries in (("source", source_entries), ("addon", addon_entries)):
+    for kind in ARCHIVE_KINDS:
+        entries = {member: contents[source] for member, source in archive_members(manifest, contents, kind).items()}
         destination = output / names[kind]
         with tempfile.NamedTemporaryFile(dir=output, prefix=".release-", suffix=".zip", delete=False) as handle:
             temporary = Path(handle.name)

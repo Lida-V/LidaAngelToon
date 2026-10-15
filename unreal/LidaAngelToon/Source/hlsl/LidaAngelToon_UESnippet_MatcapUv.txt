@@ -1,0 +1,8 @@
+// LidaAngelToon - Unreal Engine Custom node body (small helper, written by lidaangeltoon_ue_build.py).
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// Copyright (c) 2026 Lida
+// LidaAngelToon: MatCap UV in Unreal (view space +X right, +Y up; texture V = 0 is the top row)
+float3 n = mul(Nw, (float3x3)ResolvedView.TranslatedWorldToView);
+float l2 = dot(n, n);
+n = (l2 > 0.0) ? n * rsqrt(l2) : float3(0.0, 0.0, 0.0);
+return float2(n.x * 0.5 + 0.5, 0.5 - n.y * 0.5);

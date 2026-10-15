@@ -1,0 +1,5 @@
+// LidaAngelToon - Unreal Engine Custom node body (small helper, written by lidaangeltoon_ue_build.py).
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// Copyright (c) 2026 Lida
+// LidaAngelToon outline (pixel shader): keep back faces of the hull where the outline mask > 0.5
+return (Sgn < 0.0 && Mb > 0.5 && Vis > 0.5) ? 1.0 : 0.0;

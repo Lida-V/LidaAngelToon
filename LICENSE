@@ -1,14 +1,35 @@
 LidaAngelToon license map
 Copyright (c) 2026 Lida
 
-Blender addon and Python scripts using bpy: GPL-3.0-or-later.
-See LICENSES/GPL-3.0-or-later.txt and per-file SPDX identifiers.
+1. GPL-3.0-or-later
+   Python code of the Blender add-on (blender/lida_angel_toon/*.py) and the
+   Python tests that use bpy (tests/blender_smoke.py, tests/blender_zip_smoke.py).
+   See LICENSES/GPL-3.0-or-later.txt and the per-file SPDX identifiers.
 
-Original documentation, procedural PNG assets, presets and standalone tooling
-without another SPDX identifier: Lida Attribution License 1.0.
-See LICENSES/Lida-Attribution-1.0.txt.
+2. Lida Attribution License 1.0 (LicenseRef-Lida-Attribution-1.0)
+   Everything else, unless a file carries another SPDX identifier.
+   See LICENSES/Lida-Attribution-1.0.txt. This includes:
+   - the Unity package (unity/): shaders, HLSL, C#, asmdef, package.json,
+     .meta files and documents;
+   - the Unreal Engine files (unreal/): Python that uses the unreal module
+     (not bpy), Custom-node text, HLSL, default PNG textures and documents;
+   - the shared shading core and its tools (core/);
+   - documents (README, CHANGELOG, docs/), the procedural PNG assets of the
+     Blender add-on (blender/lida_angel_toon/assets/), the release tools
+     (scripts/), tools/ and tests/test_*.py.
+   Files that cannot carry a comment (.meta, .json, .asmdef, .png) follow the
+   folder they are in.
 
+Personal and commercial use, modification, incorporation and redistribution of
+the Lida Attribution parts are allowed, also bundled with an avatar, a model, a
+game or an app. When redistributing or bundling them, keep the author notice,
+the license text and the source in NOTICE.md, and describe significant
+modifications. The Unity package and the Unreal Engine folder carry this
+information in their own LICENSE.md (unity/jp.lida.angeltoon/LICENSE.md,
+unreal/LidaAngelToon/LICENSE.md); keep that file in the copy you distribute.
+
+The GPL-covered add-on is not restricted further by the other license.
 Keep author notices and applicable license texts when redistributing source.
-Models and rendered images produced with the shader do not require a credit
-under these project terms merely because the shader was used.
+Models and rendered images produced with the shaders do not require a credit
+under these project terms merely because the shaders were used.
 No character model, reference dance FBX, or third-party asset is licensed here.
