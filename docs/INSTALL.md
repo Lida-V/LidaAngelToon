@@ -1,5 +1,7 @@
 # 導入と更新
 
+この文書は Blender アドオンの導入です。Unity は [unity/README.md](../unity/README.md)、Unreal Engine は [unreal/README.md](../unreal/README.md) を見てください。
+
 ## 用意するもの
 
 - Blender 5.2.1 LTS。表示エンジンはEEVEE。
@@ -8,7 +10,7 @@
 
 ## ZIPを入れる
 
-1. [配布元](https://github.com/Lida-V/LidaAngelToon)のReleasesから末尾が `-addon.zip` のファイルを取得します。
+1. [配布元](https://github.com/Lida-V/LidaAngelToon)のReleasesから末尾が `-blender-addon.zip` のファイルを取得します。
 2. Blenderの「編集 → プリファレンス → アドオン」で「ディスクからインストール」を選び、ZIPを指定します。
 3. LidaAngelToonを有効にします。EEVEEのシーンでメッシュを選び、3Dビューの `N` キーから同名タブを開きます。
 
