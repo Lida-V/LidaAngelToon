@@ -1,0 +1,39 @@
+name: Validate release
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUTF8: "1"
+    steps:
+      - name: Keep checked-out bytes identical across hosts
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Validate complete source allowlist
+        run: python scripts/validate_release.py
+      - name: Build and verify release ZIPs
+        run: python scripts/build_release.py
+      - name: Preserve verified release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: LidaAngelToon-${{ matrix.os }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14
