@@ -9,7 +9,7 @@ project from the files of this folder.
 |---|---|
 | `Python/lidaangeltoon_ue_build.py` | builds every generic asset (below) with the Unreal Python API (editor only) |
 | `Python/lidaangeltoon_ue_instances.py` | helpers: `make_instance`, `core_values` (the 32 values with their spec names), `import_texture_file` (texture import with the right sRGB / compression / sampling) |
-| `Source/hlsl/LidaAngelToon_UECustom_Shade.txt`, `..._OutlineWidth.txt` | Custom-node bodies generated from the core (`core/scripts/make_ue_custom338.py`); do not edit by hand |
+| `Source/hlsl/LidaAngelToon_UECustom_Shade.txt`, `..._OutlineWidth.txt` | Custom-node bodies generated from the core (`core/scripts/make_ue_custom.py`); do not edit by hand |
 | `Source/hlsl/LidaAngelToon_UESnippet_*.txt` | small Custom-node bodies used by the build (normal, MatCap UV, dither, outline mask, outline view, shadowed N.L) |
 | `Source/hlsl/LidaAngelToonCore.hlsl` | a copy of `core/LidaAngelToonCore.hlsl` (reference) |
 | `Source/textures/T_LidaAngelToon_*.png` | 4 x 4 default textures (white, black, grey 0.5, default mask) - the build writes them again |
@@ -83,7 +83,7 @@ says "delete and rebuild", the code rebuilds in place), `LIDAANGELTOON_BUILD_REP
 
 ## License
 
-Lida Attribution License 1.0 (the full text and the source notice are in `LidaAngelToon/LICENSE.md`; keep that
+Lida Attribution License 1.1 (the full text and the source notice are in `LidaAngelToon/LICENSE.md`; keep that
 file in `Content/LidaAngelToon`). Commercial use, modification and redistribution, also inside a project, a
 game or with an avatar, are allowed; keep `LICENSE.md`, the SPDX / copyright lines and the source URL, and
 describe your main changes. Results made with the shader need no credit.
