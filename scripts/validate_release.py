@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 """Validate the complete, explicitly declared source and release ZIP contents."""
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ NOTICE_FILES = ("LICENSE", "NOTICE.md")
 ENGINE_ARCHIVE_PREFIXES = {"unity": "unity/", "unreal": "unreal/"}
 ENGINE_DOCS = (
     "docs/SPEC.md", "docs/SPEC.ja.md", "docs/BLENDER-NODE-MAPPING.md",
-    "docs/OUTLINE-RULE-B.md", "docs/COLOR-AND-TONEMAP.md",
+    "docs/OUTLINE-RULE-B.md", "docs/COLOR-AND-TONEMAP.md", "docs/CROSS-ENGINE-LOOK.md",
 )
 ARCHIVE_KINDS = ("source", "addon", "unity", "unreal")
 ARCHIVE_FILE_NAMES = {
@@ -47,10 +47,10 @@ REQUIRED_FILES = frozenset({
     "tests/test_release_tools.py", "tests/test_repository_consistency.py",
     "tests/blender_smoke.py",
     "LICENSES/GPL-3.0-or-later.txt",
-    "LICENSES/Lida-Attribution-1.0.txt",
+    "LICENSES/Lida-Attribution-1.1.txt",
     "core/LidaAngelToonCore.hlsl",
-    "unity/README.md", "unity/jp.lida.angeltoon/package.json",
-    "unity/jp.lida.angeltoon/LICENSE.md",
+    "unity/README.md", "unity/com.github.lida-v.lidaangeltoon/package.json",
+    "unity/com.github.lida-v.lidaangeltoon/LICENSE.md",
     "unreal/README.md", "unreal/LidaAngelToon/LICENSE.md",
     "unreal/LidaAngelToon/Python/lidaangeltoon_ue_build.py",
     *ENGINE_DOCS,

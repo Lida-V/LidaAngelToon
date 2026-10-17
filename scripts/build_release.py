@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 """Build deterministic, validated release ZIPs in dist/: source, Blender add-on, Unity and Unreal Engine."""
 
 from __future__ import annotations
