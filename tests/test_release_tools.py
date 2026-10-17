@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 """Exercise real source-tree and ZIP failure modes without requiring Blender."""
 
 from __future__ import annotations
@@ -35,11 +35,11 @@ class ReleaseToolsTests(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.files = sorted(REQUIRED_FILES | {
             "blender/lida_angel_toon/assets/sample.png",
-            "unity/jp.lida.angeltoon/Runtime/Shaders/Sample.shader",
-            "unity/jp.lida.angeltoon/Runtime/Shaders/Sample.shader.meta",
-            "unity/jp.lida.angeltoon/Runtime/Shaders/SampleCore.hlsl",
-            "unity/jp.lida.angeltoon/Editor/Sample.cs",
-            "unity/jp.lida.angeltoon/Editor/Sample.Editor.asmdef",
+            "unity/com.github.lida-v.lidaangeltoon/Runtime/Shaders/Sample.shader",
+            "unity/com.github.lida-v.lidaangeltoon/Runtime/Shaders/Sample.shader.meta",
+            "unity/com.github.lida-v.lidaangeltoon/Runtime/Shaders/SampleCore.hlsl",
+            "unity/com.github.lida-v.lidaangeltoon/Editor/Sample.cs",
+            "unity/com.github.lida-v.lidaangeltoon/Editor/Sample.Editor.asmdef",
             "unreal/LidaAngelToon/Source/hlsl/Sample_UECustom.txt",
             "unreal/LidaAngelToon/Source/textures/sample.png",
         })
@@ -68,11 +68,11 @@ class ReleaseToolsTests(unittest.TestCase):
             self.assertIn("lida_angel_toon/LICENSE", bundle.namelist())
             self.assertIn("lida_angel_toon/NOTICE.md", bundle.namelist())
             self.assertIn("lida_angel_toon/LICENSES/GPL-3.0-or-later.txt", bundle.namelist())
-            self.assertIn("lida_angel_toon/LICENSES/Lida-Attribution-1.0.txt", bundle.namelist())
+            self.assertIn("lida_angel_toon/LICENSES/Lida-Attribution-1.1.txt", bundle.namelist())
             self.assertNotIn("lida_angel_toon/tests/blender_smoke.py", bundle.namelist())
             self.assertFalse(any("/unity/" in name or "/unreal/" in name for name in bundle.namelist()))
         for kind, package_file in (
-            ("unity", "unity/jp.lida.angeltoon/package.json"),
+            ("unity", "unity/com.github.lida-v.lidaangeltoon/package.json"),
             ("unreal", "unreal/LidaAngelToon/Python/lidaangeltoon_ue_build.py"),
         ):
             with self.subTest(kind=kind):
@@ -84,7 +84,7 @@ class ReleaseToolsTests(unittest.TestCase):
                 self.assertIn(prefix + package_file, names)
                 self.assertIn(prefix + f"{kind}/README.md", names)
                 for name in ("LICENSE", "NOTICE.md", "LICENSES/GPL-3.0-or-later.txt",
-                             "LICENSES/Lida-Attribution-1.0.txt", *ENGINE_DOCS):
+                             "LICENSES/Lida-Attribution-1.1.txt", *ENGINE_DOCS):
                     self.assertIn(prefix + name, names)
                 other = "unreal/" if kind == "unity" else "unity/"
                 self.assertFalse(any(name[len(prefix):].startswith((other, "blender/", "core/", "scripts/"))
@@ -92,18 +92,18 @@ class ReleaseToolsTests(unittest.TestCase):
                 self.assertNotIn(prefix + "README.md", names)
 
     def test_unity_and_unreal_text_types_are_checked(self):
-        shader = self.root / "unity/jp.lida.angeltoon/Runtime/Shaders/Sample.shader"
+        shader = self.root / "unity/com.github.lida-v.lidaangeltoon/Runtime/Shaders/Sample.shader"
         shader.write_text("// shader\n" + "C" + ":/" + "Users/example/project\n", encoding="utf-8")
         with self.assertRaisesRegex(ValidationError, "Local absolute path"):
             validate_release(self.root)
         shader.write_text("// shader\n", encoding="utf-8")
-        (self.root / "unity/jp.lida.angeltoon/Editor/Sample.cs").write_bytes(b"\xff\xfe")
+        (self.root / "unity/com.github.lida-v.lidaangeltoon/Editor/Sample.cs").write_bytes(b"\xff\xfe")
         with self.assertRaisesRegex(ValidationError, "valid UTF-8"):
             validate_release(self.root)
 
     def test_engine_assets_and_projects_rejected(self):
-        for name in ("unreal/LidaAngelToon/Materials/M_Sample.uasset", "unity/jp.lida.angeltoon/Sample.mat",
-                     "unity/jp.lida.angeltoon/Sample.unitypackage", "unity/Sample.asset", "unreal/Sample.uproject"):
+        for name in ("unreal/LidaAngelToon/Materials/M_Sample.uasset", "unity/com.github.lida-v.lidaangeltoon/Sample.mat",
+                     "unity/com.github.lida-v.lidaangeltoon/Sample.unitypackage", "unity/Sample.asset", "unreal/Sample.uproject"):
             with self.subTest(name=name):
                 path = self.root / name
                 path.parent.mkdir(parents=True, exist_ok=True)
