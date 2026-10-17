@@ -3,9 +3,10 @@
 - このリポジトリはシェーダーのコード・手続き素材・導入資料のみ。モデル本体、FBX、VRM、参考モーション、購入素材、外部コード、UE の `.uasset`、Unity の場面・材質・資産のファイルを同梱しない。
 - Blenderは5.2.1 LTS / EEVEEを基準に、原始図形だけで確認する。既存の制作モデルを開いてテストしない。
 - Unity（URP）版は `unity/`、Unreal Engine 5 版は `unreal/`、両方の共通の式は `core/`。検証済みとして書いてよいのは、Unity 6000.6.0f1・URP 17.6・Linear・Forward+・D3D11（Windows）、UE 5.8（Windows）、開発に使った基準のノードグループ（同梱しない）との比べの結果だけ。アドオンのノードグループと共通の式の数値の一致、ほかの版・API・OSは未検証。計画や互換性の予想を、実装・検証済みとして記載しない。
-- SPDXとLICENSEの範囲を守る。bpy を使う Blender アドオンの Python は GPL-3.0-or-later、それ以外（Unity・UE・core のファイル、文書、画像）は Lida Attribution License 1.0。GPL部分に独自の追加制限を課さない。アプリや配布コード、作品へ組み込む際にNOTICEを保持する（Unity パッケージと UE のフォルダは中の `LICENSE.md` に全文と出典を持つ）。
-- 共通の式の3つの写し（`core/`・Unity・UE）は同じバイトに保ち、UE の Custom ノードの文は `core/scripts/make_ue_custom338.py` で core から作る。手で直さない。シェーダー・Unity・UE の文は ASCII だけ。`tests/test_repository_consistency.py` で照合する。
-- 公開対象はmanifestのallowlistで管理。ローカルの制作パス、候補番号、個人情報、認証情報を公開資料へ残さない。
+- SPDXとLICENSEの範囲を守る。bpy を使う Blender アドオンの Python は GPL-3.0-or-later、それ以外（Unity・UE・core のファイル、文書、画像）は Lida Attribution License 1.1（1.0 の第1条にシェーダーのコードを明記した版。1.0 で配った版は 1.0 のまま）。GPL部分に独自の追加制限を課さない。アプリや配布コード、作品へ組み込む際にNOTICEを保持する（Unity パッケージと UE のフォルダは中の `LICENSE.md` に全文と出典を持つ）。
+- 共通の式の3つの写し（`core/`・Unity・UE）は同じバイトに保ち、UE の Custom ノードの文は `core/scripts/make_ue_custom.py` で core から作る。手で直さない。シェーダー・Unity・UE の文は ASCII だけ。`tests/test_repository_consistency.py` で照合する。
+- Unity パッケージの名前は `com.github.lida-v.lidaangeltoon`（フォルダ名も同じ。`.meta` の GUID は仮の名前 `jp.lida.angeltoon` のときから変えていない）。
+- 公開対象はmanifestのallowlistで管理。ローカルの制作パス、候補番号、個人情報、認証情報を公開資料へ残さない。ファイル名・道具名・コメントに作業の工程番号（例：名前の末尾の3桁の番号）を付けない（`tests/test_repository_consistency.py` で照合）。
 
 ## 知見の蓄積（全ワークスペース共通）
 
@@ -17,8 +18,10 @@
 
 - シェーダーのノード計算と、特定モデルのタグ・材質名・眼画像・AOの準備を分離することで、モデルを同梱せず検証できる。プリセットは利用者が選び、原始図形で適用・復帰・保存再読込を確認する。
 - 配布ZIPの内容とソースをハッシュで照合し、addon単体にもLICENSE・NOTICEとライセンス全文を保持する。
-- 0.2.0 で Unity・UE 版を同じリポジトリにまとめた。配布 ZIP はプラットフォームごと（source・blender-addon・unity・unreal）。unity・unreal の ZIP はフォルダ・README・共通の文書 5 つ・ライセンスを同じ相対パスで持ち、文書のリンクが ZIP の中で切れない。
+- 0.2.0 で Unity・UE 版を同じリポジトリにまとめた。配布 ZIP はプラットフォームごと（source・blender-addon・unity・unreal）。unity・unreal の ZIP はフォルダ・README・共通文書・ライセンスを同じ相対パスで持ち、文書のリンクが ZIP の中で切れない。0.2.1では外観比較の資料を含む共通文書6つを収録する。
 - 生成した文（UE の Custom ノードの文）や写し（共通の式）は、生成元・元と照合するテストを置くと、片方だけ直す事故を防げる。ライセンスの欄を直すときは生成元の見出しの文も一緒に直す。
 - Unity のパッケージの中のファイルを足すと `.meta` が要る。ライセンスの全文はパッケージに元からある `LICENSE.md`（`.meta` あり）に入れ、新しいファイルを足さない。
 - READMEの原始図形画像は公開アドオン0.1.0の実描画で、3エンジンの実モデル作例とは条件が違う。作例はエンジン/版/材質/基準モデルと実際の撮影資料へ対応させ、開発用LidaSoftToonを公開addonへ適用した結果と案内しない。
 - 2026-10-15ユーザーはリダ実モデルのBlender/Unity/UE画像の掲載を明示した。掲載準備は既存レンダーを優先し、復元が必要なら検証用コピー/既存撮影で行う。制作原本のモデル/採否を変えない。資料画像には©2026 Lidaと出典URLを余白へ表示し、描画用テクスチャは変更しない。
+- 名前（パッケージ名・道具名・ライセンスの版）を変えるときは、新しい名前で作って manifest を置き換え、古いパスは別に消す。作業の写しで古いファイルが残ると検査は「未列挙のファイル」で止まるので、検査は manifest どおりの写しで行い、残ったファイルの一覧を渡す。
+- 外観比較は、固定露出・同じカメラと主光で取り込み・色管理を先に確認し、材質調整と描画仕様差を分ける。キャラクターの基準材質とショット側の照明・カラー調整を別記録にする。比較用のトーン曲線なしを、本番の映画表現を制限する規則として案内しない。
