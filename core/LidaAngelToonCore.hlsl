@@ -1,7 +1,7 @@
 // ============================================================================
-// LidaAngelToonCore.hlsl  -  LidaAngelToon spec v1 (toonspec338)
+// LidaAngelToonCore.hlsl  -  LidaAngelToon spec v1 (docs/SPEC.md)
 //
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 //
 // Copyright (c) 2026 Lida
 // ============================================================================
@@ -9,7 +9,7 @@
 // Shared shading core of LidaAngelToon (Unity URP and Unreal Engine).
 // It reproduces, as one pure function, the Blender node group "LidaSoftToon"
 // that is the reference look (the group itself keeps its Blender name).
-// Python twin with the same math: scripts/core338.py (lines tagged [S01]..[S24]).
+// Python twin with the same math: core/scripts/core_reference.py (lines tagged [S01]..[S24]).
 //
 // Rules
 // - All colours are LINEAR. Sample sRGB textures with sRGB decoding before passing them.
@@ -22,11 +22,12 @@
 // - Factors of blend steps are clamped to 0..1 exactly where the Blender Mix node clamps.
 // - AngelToonSmoothstep returns 0 when lo == hi (same as Blender Map Range).
 // - Nothing character specific lives here: material names, values, textures and paths
-//   are data (data/material_table338.json).
+//   are data (Unity material or preset, Unreal Material Instance).
 //
 // Unity (URP):  #include "LidaAngelToonCore.hlsl" and call AngelToonShade() in the fragment.
-// Unreal (Custom node): use hlsl/LidaAngelToon_UECustom.txt, generated from the
-//   ANGELTOON_TYPES / ANGELTOON_FUNCS blocks below by scripts/make_ue_custom338.py.
+// Unreal (Custom node): use unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt
+//   and _OutlineWidth.txt, generated from the ANGELTOON_TYPES / ANGELTOON_FUNCS blocks below
+//   by core/scripts/make_ue_custom.py.
 // ============================================================================
 #ifndef LIDA_ANGEL_TOON_CORE_INCLUDED
 #define LIDA_ANGEL_TOON_CORE_INCLUDED

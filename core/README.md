@@ -3,8 +3,8 @@
 | File | Content |
 |---|---|
 | `LidaAngelToonCore.hlsl` | the whole shading as pure functions (no texture sampling, no engine code). Pure ASCII. Unity includes it; Unreal uses the Custom-node text generated from it |
-| `scripts/core338.py` | the same math in numpy (Python 3, numpy only). Each step carries the same tag `[S01]`..`[S24]` as the HLSL, so the two can be read side by side. `FIELDS` maps each HLSL member to the Blender node input name |
-| `scripts/make_ue_custom338.py` | generates `unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt` and `..._OutlineWidth.txt` from the core, and `core/tests/ue_custom_check.hlsl` (the two bodies wrapped like Unreal does, for an fxc / dxc syntax check) |
+| `scripts/core_reference.py` | the same math in numpy (Python 3, numpy only). Each step carries the same tag `[S01]`..`[S24]` as the HLSL, so the two can be read side by side. `FIELDS` maps each HLSL member to the Blender node input name |
+| `scripts/make_ue_custom.py` | generates `unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt` and `..._OutlineWidth.txt` from the core, and `core/tests/ue_custom_check.hlsl` (the two bodies wrapped like Unreal does, for an fxc / dxc syntax check) |
 
 ## Functions
 
@@ -30,7 +30,7 @@ steps in [../docs/SPEC.md](../docs/SPEC.md).
 - After changing the core, regenerate the Unreal text:
 
   ```
-  python -I core/scripts/make_ue_custom338.py . unreal/LidaAngelToon/Source/hlsl dist/ue_custom_check.hlsl
+  python -I core/scripts/make_ue_custom.py . unreal/LidaAngelToon/Source/hlsl dist/ue_custom_check.hlsl
   ```
 
   (run from the repository root; without the last two arguments the syntax-check file is written to
@@ -40,22 +40,17 @@ steps in [../docs/SPEC.md](../docs/SPEC.md).
 ## Notes on the header of LidaAngelToonCore.hlsl
 
 The three copies of the core (`core/`, the Unity package, `unreal/.../Source/hlsl/`) are byte-identical
-(checked by `tests/test_repository_consistency.py`). Compared with the file used in the engine tests, only the two
-comment lines of the header changed (license and copyright: SPDX `LicenseRef-Lida-Attribution-1.0`,
-`Copyright (c) 2026 Lida`); the code is the same. The header still names the files of the place where it was
-written:
+(checked by `tests/test_repository_consistency.py`). Compared with the file used in the engine tests, only comment
+lines of the header changed: the license and copyright lines (SPDX `LicenseRef-Lida-Attribution-1.1`,
+`Copyright (c) 2026 Lida`) and the file names it points to, which now are the paths of this repository
+(`docs/SPEC.md`, `core/scripts/core_reference.py`, `core/scripts/make_ue_custom.py` and the two Unreal text files).
+The code is the same. Per-material values are not part of the core: they go into the Unity material / preset or
+the Unreal Material Instance.
 
-| Header says | In this package |
-|---|---|
-| `spec v1 (toonspec338)` | spec v1 = [../docs/SPEC.md](../docs/SPEC.md) (toonspec338 is the internal name of the step that wrote it) |
-| `scripts/core338.py` | `core/scripts/core338.py` |
-| `data/material_table338.json` (the per-material values) | not included (character data). Per-material values go into the Unity material / preset or the Unreal Material Instance |
-| `hlsl/LidaAngelToon_UECustom.txt`, `scripts/make_ue_custom338.py` | `unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt` and `_OutlineWidth.txt`, `core/scripts/make_ue_custom338.py` |
-
-`core338.py` got a license header comment in front (the code is unchanged; its Python syntax tree is identical).
-Its docstring mentions a comparison script of the original workspace that is not part of this repository.
-`make_ue_custom338.py` reads and writes the package locations instead of the original ones; the generated text is
-the same.
+`core_reference.py` got a license header comment and a docstring that names the paths of this repository; its code
+is the same as in the engine tests. `make_ue_custom.py` reads and writes the locations of this repository instead
+of the ones of the engine tests and writes header lines with the license and its own path into the Unreal text; the
+generated code below those lines is the same.
 
 ## Checks done for 0.1.0
 
