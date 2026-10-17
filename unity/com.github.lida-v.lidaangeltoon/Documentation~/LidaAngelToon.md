@@ -106,5 +106,5 @@ not in the shader.
 
 - The shader keeps the same results as the Blender reference of spec v1 when bloom and tone mapping are off.
 - Antialiasing: MSAA (4x tested) smooths the outline and is needed for alpha to coverage.
-- License: Lida Attribution License 1.0 (`LICENSE.md` of the package). Author: Lida.
+- License: Lida Attribution License 1.1 (`LICENSE.md` of the package). Author: Lida.
   Source: https://github.com/Lida-V/LidaAngelToon

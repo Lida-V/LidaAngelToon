@@ -1,11 +1,12 @@
-Lida Attribution License 1.0
-SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+Lida Attribution License 1.1
+SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 Copyright (c) 2026 Lida
 
 1. 対象と許諾
 本条件は、著作者が権利を有し、本条件で提供する文書、図解、指示文、
-補助コード、素材（以下「本資料」）に適用します。本条件に従う限り、
-商用・非商用を問わず、本資料の利用、複製、改変、組込み、再配布を許諾します。
+シェーダーのコード、補助コード、素材（以下「本資料」）に適用します。
+本条件に従う限り、商用・非商用を問わず、本資料の利用、複製、改変、
+組込み、再配布を許諾します。
 別のライセンスを明記したファイルは、そのライセンスを優先します。
 
 2. 制作成果物

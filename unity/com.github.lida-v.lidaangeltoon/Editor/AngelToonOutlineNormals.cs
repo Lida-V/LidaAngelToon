@@ -1,7 +1,7 @@
 // ============================================================================
 // AngelToonOutlineNormals.cs  -  LidaAngelToon: smoothed outline normals stored in UV3 (tangent space)
 //
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 //
 // Copyright (c) 2026 Lida
 // ============================================================================

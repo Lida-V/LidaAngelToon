@@ -1,7 +1,7 @@
 # ============================================================================
 # lidaangeltoon_ue_build.py  -  LidaAngelToon for Unreal Engine 5 (built and tested on UE 5.8)
 #
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 # Copyright (c) 2026 Lida
 #
 # Builds the generic LidaAngelToon assets with the Unreal Python API (editor only):
@@ -16,7 +16,7 @@
 # Usage (editor commandlet):
 #   UnrealEditor-Cmd.exe <project>.uproject -run=pythonscript -script=<this file>
 #   environment: LIDAANGELTOON_HLSL_DIR = folder with LidaAngelToon_UECustom_Shade.txt / _OutlineWidth.txt
-#                (generated from LidaAngelToonCore.hlsl by make_ue_custom338.py)
+#                (generated from LidaAngelToonCore.hlsl by core/scripts/make_ue_custom.py)
 #                LIDAANGELTOON_REBUILD = 1 to delete and rebuild existing LidaAngelToon assets of this script
 #
 # Nothing character specific lives here: per-material values go into Material Instances

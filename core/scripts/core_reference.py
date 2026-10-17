@@ -1,11 +1,11 @@
 # ============================================================================
-# core338.py  -  LidaAngelToon: numpy reference of LidaAngelToonCore.hlsl (same math, same [Sxx] tags)
+# core_reference.py  -  LidaAngelToon: numpy reference of LidaAngelToonCore.hlsl (same math, same [Sxx] tags)
 #
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 #
 # Copyright (c) 2026 Lida
 # ============================================================================
-"""core338.py  -  LidaAngelToon spec v1 (toonspec338): the same math as hlsl/LidaAngelToonCore.hlsl in numpy.
+"""core_reference.py  -  LidaAngelToon spec v1 (docs/SPEC.md): the same math as core/LidaAngelToonCore.hlsl in numpy.
 (Claude Opus 5.5, 2026-10-15)
 
 Each step carries the same tag [S01]..[S24] as the HLSL, so the two can be read side by side.
@@ -13,7 +13,8 @@ All colours are linear. Arrays: vectors are (..., 3), scalars are (...).
 The material is a dict with the HLSL field names (see FIELDS); values may be scalars or arrays
 that broadcast against the pixel arrays.
 
-Used by scripts/v02_compare338.py to check the formula against Blender renders (EEVEE, 1 sample, AOVs).
+It was used to check the formula against Blender renders (EEVEE, 1 sample, inputs read back as AOVs);
+that comparison script is not part of this repository.
 """
 import numpy as np
 

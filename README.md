@@ -14,16 +14,22 @@
 
 各環境向けに材質と画像を設定した制作例です。初期値のまま同じ外観になることや、3環境で全画素が一致することを示すものではありません。キャラクターモデル・専用の材質表・専用画像は配布に含みません。
 
+### エンジンの移動や、映画のショット間で見た目を揃えるには？
+
+今回差を確認したのは、肌・髪の色と明暗、髪の影と艶、輪郭線、羽の透過です。まず色管理・露出・画像の取り込み設定を揃え、材質と影の仕様差を分けて調整します。基準の材質プリセットと、同じ光で撮った正面・斜め・横・全身の画像を保存し、本番ショットの仕上げ後にも比較します。
+
+具体的な順序、UE版の落ち影の制限、英語での回答は[外観差とショット間の一貫性](docs/CROSS-ENGINE-LOOK.md)へ。映画の照明・カラーグレーディングを固定する規則ではなく、今回の比較から整理した方法です。
+
 ## 使う環境を選ぶ
 
-**[Release 0.2.0](https://github.com/Lida-V/LidaAngelToon/releases/tag/v0.2.0)** から取得できます。リポジトリの配布版は0.2.0、Blenderアドオン・Unityパッケージ・UE用ファイルはそれぞれ0.1.0です。
+**[Release 0.2.1](https://github.com/Lida-V/LidaAngelToon/releases/tag/v0.2.1)** から取得できます。リポジトリの配布版は0.2.1、Blenderアドオン・Unityパッケージ・UE用ファイルはそれぞれ0.1.0です。
 
 | 環境 | 導入用ZIP | 最初に読むもの |
 |---|---|---|
-| Blender 5.2.1 LTS / EEVEE | [Blenderアドオン](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-blender-addon.zip) | [インストール](docs/INSTALL.md) |
-| Unity 6 / URP 17 | [Unityパッケージ](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-unity.zip) | [Unityの導入](unity/README.md) |
-| Unreal Engine 5 | [UE用ファイル](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-unreal.zip) | [UEの導入](unreal/README.md) |
-| 開発者 | [全ソース](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.0/LidaAngelToon-0.2.0-source.zip) | [仕様](docs/SPEC.ja.md) |
+| Blender 5.2.1 LTS / EEVEE | [Blenderアドオン](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.1/LidaAngelToon-0.2.1-blender-addon.zip) | [インストール](docs/INSTALL.md) |
+| Unity 6 / URP 17 | [Unityパッケージ](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.1/LidaAngelToon-0.2.1-unity.zip) | [Unityの導入](unity/README.md) |
+| Unreal Engine 5 | [UE用ファイル](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.1/LidaAngelToon-0.2.1-unreal.zip) | [UEの導入](unreal/README.md) |
+| 開発者 | [全ソース](https://github.com/Lida-V/LidaAngelToon/releases/download/v0.2.1/LidaAngelToon-0.2.1-source.zip) | [仕様](docs/SPEC.ja.md) |
 
 **ソースZIP全体をBlenderへインストールしないでください。** Blenderは上表のアドオンZIP、UnityとUEはそれぞれのZIPを選びます。UE版はPythonで材質などを作る構成で、`.uasset`の配布ではありません。VRM自動変換は収録していません。
 
@@ -57,7 +63,7 @@
 
 ### Unity
 
-1. `unity/jp.lida.angeltoon`を`.meta`ごとURPプロジェクトの`Packages/`へ置くか、Package ManagerのAdd package from diskで`package.json`を選びます。
+1. `unity/com.github.lida-v.lidaangeltoon`を`.meta`ごとURPプロジェクトの`Packages/`へ置くか、Package ManagerのAdd package from diskで`package.json`を選びます。以前の仮の名前`jp.lida.angeltoon`のフォルダがある場合は、先にそれを外してください（中のGUIDが同じため）。
 2. `LidaAngelToon/Toon`の材質を作り、Base MapとBase Colorを設定します。
 3. 必要ならマスクをsRGB OFFで取り込み、Use Mask Textureを有効にします。主光はURPのMain Light、固定光は`AngelToonGlobals`で指定します。
 
@@ -88,7 +94,7 @@ UnityとUEは共通の`core/LidaAngelToonCore.hlsl`を使います。Blenderア�
 [LICENSE](LICENSE)が適用範囲、[NOTICE](NOTICE.md)が出典の案内です。**商用利用・改変・作品への組み込み・再配布は可能です。**
 
 - bpyを使うBlenderアドオンとテスト：**GPL-3.0-or-later**。
-- Unity・UE・共通HLSL・その他の文書や画像：**Lida Attribution License 1.0**。各ファイルのSPDXも確認してください。
+- Unity・UE・共通HLSL・その他の文書や画像：**Lida Attribution License 1.1**。各ファイルのSPDXも確認してください。1.1は1.0の第1条にシェーダーのコードを明記した版で、1.0で配布した版（v0.1.0など）は1.0のままです。
 
 アプリ・ゲーム・アバターへコードを組み込んで配布するときは、Lida名・出典URL・ライセンスを保持し、主な改変を記載します。UnityパッケージとUEフォルダ内の`LICENSE.md`に全文と出典があります。GPL部分へ独自の追加制限は課しません。通常の描画画像・動画や、シェーダーを使って作ったモデル成果だけならクレジットは不要です。
 
@@ -107,7 +113,7 @@ python scripts/build_release.py
 共通コアの3つの写しとUE Customノードの生成結果、Unityの`.meta`、SPDX、ASCIIコード、ZIP内の相対リンクは既存テストで照合します。共通コア変更後のUEテキスト生成：
 
 ```text
-python -I core/scripts/make_ue_custom338.py . unreal/LidaAngelToon/Source/hlsl dist/ue_custom_check.hlsl
+python -I core/scripts/make_ue_custom.py . unreal/LidaAngelToon/Source/hlsl dist/ue_custom_check.hlsl
 ```
 
 原始図形だけでアドオンを試す場合：

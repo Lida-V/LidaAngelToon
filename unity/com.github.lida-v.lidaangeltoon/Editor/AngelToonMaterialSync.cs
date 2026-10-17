@@ -1,7 +1,7 @@
 // ============================================================================
 // AngelToonMaterialSync.cs  -  LidaAngelToon: keep keywords, passes, blend and queue in step with the properties
 //
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 //
 // Copyright (c) 2026 Lida
 // ============================================================================

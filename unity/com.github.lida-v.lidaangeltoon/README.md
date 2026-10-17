@@ -10,16 +10,19 @@ two-layer materials (for example cloth and skin in one material), a highlight ro
 inverted-hull outline whose width stays between a minimum and a maximum number of screen pixels.
 The shading core (`Runtime/Shaders/LidaAngelToonCore.hlsl`) is the same file as in the Unreal Engine version.
 
-Status: 0.1.0, first version. License: Lida Attribution License 1.0 (`LicenseRef-Lida-Attribution-1.0`),
+Status: 0.1.0, first version. License: Lida Attribution License 1.1 (`LicenseRef-Lida-Attribution-1.1`),
 see `LICENSE.md`. Keep `LICENSE.md` when you redistribute this package or bundle it with an avatar, a model or a
 game, and describe your main changes. Source: https://github.com/Lida-V/LidaAngelToon
 
 ## Name
 
 - Shader name `LidaAngelToon` was chosen by the author (Lida).
-- Package name `jp.lida.angeltoon` follows the Unity rule for package names (reverse-domain style, lower case).
-  It is a working name: decide the final one (for example `com.<github account>.angeltoon`) before publishing,
-  because a reverse-domain name should belong to the publisher.
+- Package name `com.github.lida-v.lidaangeltoon` follows the Unity rule for package names (reverse-domain style,
+  lower case) and is derived from the repository that publishes it (github.com/Lida-V/LidaAngelToon).
+  The package folder has the same name.
+- An earlier build of this version used the working name `jp.lida.angeltoon`. The code, the shader names and the
+  asset GUIDs (`.meta`) are the same. If a project has the old folder, remove `Packages/jp.lida.angeltoon` before
+  adding this one (two folders with the same GUIDs conflict); materials keep their shader.
 
 ## Install
 

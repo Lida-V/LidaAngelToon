@@ -1,5 +1,5 @@
 // LidaAngelToon - Unreal Engine Custom node body (small helper, written by lidaangeltoon_ue_build.py).
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 // Copyright (c) 2026 Lida
 // LidaAngelToon: shading normal = vertex normal, flipped toward the viewer on back faces
 float3 n = Nv;

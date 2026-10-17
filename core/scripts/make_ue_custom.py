@@ -1,20 +1,20 @@
 # ============================================================================
-# make_ue_custom338.py  -  LidaAngelToon: generate the Unreal Engine Custom-node bodies from the core
+# make_ue_custom.py  -  LidaAngelToon: generate the Unreal Engine Custom-node bodies from the core
 #
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 #
 # Copyright (c) 2026 Lida
 # ============================================================================
 """Generate the Unreal Engine Custom-node bodies from core/LidaAngelToonCore.hlsl (the single source).
 
-python -I make_ue_custom338.py <package root> [<out hlsl folder> [<out syntax-check file>]]
+python -I core/scripts/make_ue_custom.py <repository root> [<out hlsl folder> [<out syntax-check file>]]
 
-Defaults (inside the package):
-  <package root>/unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt
+Defaults (inside the repository):
+  <repository root>/unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt
       body of the Custom node that returns the shaded colour (float3)
-  <package root>/unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_OutlineWidth.txt
+  <repository root>/unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_OutlineWidth.txt
       body that returns the outline push length in world units (float1)
-  <package root>/core/tests/ue_custom_check.hlsl
+  <repository root>/core/tests/ue_custom_check.hlsl
       the bodies wrapped like Unreal does (a function per Custom node), to be compiled with fxc / dxc as a
       syntax check.
 
@@ -23,7 +23,7 @@ types are declared locally and the core's functions become member functions of a
 (the common "struct of functions" way to use helper functions in a Custom node).
 
 The generated text is the same as the one shipped in unreal/LidaAngelToon/Source/hlsl (run it after any
-change of the core). Only the file locations differ from the first version of this script.
+change of the core); tests/test_repository_consistency.py checks this.
 """
 import os, re, sys
 
@@ -52,8 +52,8 @@ def indent(s, n=4):
 
 
 head = ('// LidaAngelToon - Unreal Engine Custom node body. GENERATED from LidaAngelToonCore.hlsl\n'
-        '// by scripts/make_ue_custom338.py. Do not edit by hand: edit the core and regenerate.\n'
-        '// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0\n'
+        '// by core/scripts/make_ue_custom.py. Do not edit by hand: edit the core and regenerate.\n'
+        '// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1\n'
         '// Copyright (c) 2026 Lida\n')
 
 pins_inp = ', '.join('%s (%s)' % (n, 'float3' if t == 'float3' else 'float1') for t, n in INP)

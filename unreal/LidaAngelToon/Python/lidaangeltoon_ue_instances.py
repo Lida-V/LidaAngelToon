@@ -1,7 +1,7 @@
 # ============================================================================
 # lidaangeltoon_ue_instances.py  -  LidaAngelToon for Unreal Engine 5: Material Instance helpers
 #
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 # Copyright (c) 2026 Lida
 #
 # Generic helpers (no character data in here):

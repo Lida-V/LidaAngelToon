@@ -1,7 +1,7 @@
 // ============================================================================
 // AngelToonPreset.cs  -  LidaAngelToon: create materials from a preset JSON ("LidaAngelToon.preset/1")
 //
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 //
 // Copyright (c) 2026 Lida
 // ============================================================================

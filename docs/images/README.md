@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0 -->
+<!-- SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1 -->
 # READMEの画像と描画条件
 
 このページは原始図形のプリセット一覧と入力比較の2枚を説明します。リダ実モデルのBlender・Unity・UE画像は[実モデルの画像条件](engine-models.md)へ分けています。

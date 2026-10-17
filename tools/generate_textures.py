@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 # Copyright (c) 2026 Lida
 """Generate six original procedural textures. No photographs or model inputs."""
 import argparse

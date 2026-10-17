@@ -1,7 +1,8 @@
 # License and source notice
 
-The Unity package `jp.lida.angeltoon` of LidaAngelToon is licensed under the **Lida Attribution License 1.0**
-(`LicenseRef-Lida-Attribution-1.0`). Personal and commercial use, modification, use in your own works and
+The Unity package `com.github.lida-v.lidaangeltoon` of LidaAngelToon is licensed under the
+**Lida Attribution License 1.1**
+(`LicenseRef-Lida-Attribution-1.1`). Personal and commercial use, modification, use in your own works and
 redistribution (also bundled with an avatar, a model, a game or an app) are allowed. When you redistribute
 or bundle this package, keep this file (author, license and source), keep the SPDX and copyright lines
 of the files, and describe your main changes. Images, videos and models made with the shader need no credit.
@@ -10,23 +11,27 @@ of the files, and describe your main changes. Images, videos and models made wit
 - Author: Lida
 - Source: https://github.com/Lida-V/LidaAngelToon
 - The Blender add-on of the same repository is under GPL-3.0-or-later and is not part of this package.
+- License version: 1.1 names shader code explicitly in clause 1; otherwise it is the same as 1.0.
+  Copies that you received under the Lida Attribution License 1.0 (for example from the v0.1.0 release)
+  stay under 1.0.
 
 Example of a source acknowledgment (README, About, credits or third-party notices of your work):
 
 > This work uses LidaAngelToon by Lida. https://github.com/Lida-V/LidaAngelToon
 > Used: the LidaAngelToon Unity package (name the parts you used). Modifications: (describe them, or "none").
 
-Full text of the license (the same as `LICENSES/Lida-Attribution-1.0.txt` of the repository):
+Full text of the license (the same as `LICENSES/Lida-Attribution-1.1.txt` of the repository):
 
 ~~~text
-Lida Attribution License 1.0
-SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+Lida Attribution License 1.1
+SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 Copyright (c) 2026 Lida
 
 1. 対象と許諾
 本条件は、著作者が権利を有し、本条件で提供する文書、図解、指示文、
-補助コード、素材（以下「本資料」）に適用します。本条件に従う限り、
-商用・非商用を問わず、本資料の利用、複製、改変、組込み、再配布を許諾します。
+シェーダーのコード、補助コード、素材（以下「本資料」）に適用します。
+本条件に従う限り、商用・非商用を問わず、本資料の利用、複製、改変、
+組込み、再配布を許諾します。
 別のライセンスを明記したファイルは、そのライセンスを優先します。
 
 2. 制作成果物

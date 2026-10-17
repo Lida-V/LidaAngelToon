@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+# SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 # Copyright (c) 2026 Lida
 """Check the real repository tree: shared core copies, generated Unreal text, licenses, versions, links.
 
@@ -21,13 +21,22 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from validate_release import ENGINE_ARCHIVE_PREFIXES, _load_manifest, archive_members  # noqa: E402
 
-ATTRIBUTION = "LicenseRef-Lida-Attribution-1.0"
+ATTRIBUTION = "LicenseRef-Lida-Attribution-1.1"
 GPL = "GPL-3.0-or-later"
 KNOWN_IDS = {ATTRIBUTION, GPL}
+# license text of every identifier in use (LICENSES/ holds exactly these files)
+LICENSE_TEXTS = {ATTRIBUTION: "LICENSES/Lida-Attribution-1.1.txt", GPL: "LICENSES/GPL-3.0-or-later.txt"}
+UNITY_PACKAGE_NAME = "com.github.lida-v.lidaangeltoon"
+# Unity package names: lower case, reverse-domain style (at least three dot-separated parts)
+UNITY_NAME_RULE = re.compile(r"[a-z0-9][a-z0-9_-]*(?:\.[a-z0-9][a-z0-9_-]*){2,}")
+# Internal step names: a word that ends in a three-digit number (a tool or file named after a work step).
+# sha256 and a URP library function are ordinary names, not step names.
+STEP_NAME = re.compile(r"(?<![A-Za-z0-9_])[A-Za-z][A-Za-z0-9_]*?[A-Za-z_]\d{3}(?![0-9A-Za-z])")
+STEP_NAME_ALLOWED = re.compile(r"(?i)(?:sha256|PackFloat2To888)$")
 SPDX_LINE = re.compile(r"SPDX-License-Identifier:\s*([A-Za-z0-9.+-]+)")
 CORE_COPIES = (
     "core/LidaAngelToonCore.hlsl",
-    "unity/jp.lida.angeltoon/Runtime/Shaders/LidaAngelToonCore.hlsl",
+    f"unity/{UNITY_PACKAGE_NAME}/Runtime/Shaders/LidaAngelToonCore.hlsl",
     "unreal/LidaAngelToon/Source/hlsl/LidaAngelToonCore.hlsl",
 )
 UE_HLSL = "unreal/LidaAngelToon/Source/hlsl/"
@@ -42,8 +51,8 @@ UE_SNIPPETS = {
 }
 CODE_SUFFIXES = {".py", ".hlsl", ".shader", ".cs", ".txt"}
 ENGINE_ASCII_SUFFIXES = CODE_SUFFIXES | {".asmdef", ".json", ".meta"}
-UNITY_PACKAGE = "unity/jp.lida.angeltoon/"
-PACKAGE_LICENSES = ("unity/jp.lida.angeltoon/LICENSE.md", "unreal/LidaAngelToon/LICENSE.md")
+UNITY_PACKAGE = f"unity/{UNITY_PACKAGE_NAME}/"
+PACKAGE_LICENSES = (f"unity/{UNITY_PACKAGE_NAME}/LICENSE.md", "unreal/LidaAngelToon/LICENSE.md")
 LINK = re.compile(r"\[[^\]\n]*\]\(([^)\s]+)\)")
 
 
@@ -74,6 +83,10 @@ def link_targets(name: str, text: str):
         yield target, "/".join(parts)
 
 
+# Tool names retired in 0.2.1; only the changelog may name them.
+RETIRED_STEP_NAMES_IN_HISTORY = {"core" + "338", "make_ue_custom" + "338"}  # split so this file stays clean
+
+
 class RepositoryConsistencyTests(unittest.TestCase):
     def test_core_copies_are_identical(self):
         data = {name: (ROOT / name).read_bytes() for name in CORE_COPIES}
@@ -86,7 +99,7 @@ class RepositoryConsistencyTests(unittest.TestCase):
             out = Path(temporary) / "hlsl"
             check = Path(temporary) / "ue_custom_check.hlsl"
             result = subprocess.run(
-                [sys.executable, "-I", "-B", str(ROOT / "core/scripts/make_ue_custom338.py"), str(ROOT), str(out), str(check)],
+                [sys.executable, "-I", "-B", str(ROOT / "core/scripts/make_ue_custom.py"), str(ROOT), str(out), str(check)],
                 capture_output=True, text=True, check=False)
             self.assertEqual(result.returncode, 0, result.stderr)
             for name in UE_GENERATED:
@@ -144,13 +157,13 @@ class RepositoryConsistencyTests(unittest.TestCase):
         shader = (ROOT / "blender/lida_angel_toon/shader.py").read_text(encoding="utf-8")
         self.assertIn(f'VERSION = "{components["blender"]}"', shader)
         package = json.loads((ROOT / UNITY_PACKAGE / "package.json").read_text(encoding="utf-8"))
-        self.assertEqual(package["name"], "jp.lida.angeltoon")
+        self.assertEqual(package["name"], UNITY_PACKAGE_NAME)
         self.assertEqual(package["version"], components["unity"])
         self.assertEqual(package["license"], ATTRIBUTION)
         self.assertEqual(package["author"]["name"], "Lida")
 
     def test_package_license_files_carry_the_full_license_and_source(self):
-        full = (ROOT / "LICENSES/Lida-Attribution-1.0.txt").read_text(encoding="utf-8")
+        full = (ROOT / LICENSE_TEXTS[ATTRIBUTION]).read_text(encoding="utf-8")
         notice = (ROOT / "NOTICE.md").read_text(encoding="utf-8")
         source = re.search(r"Source:\s*(\S+)", notice).group(1)
         for name in PACKAGE_LICENSES:
@@ -161,6 +174,42 @@ class RepositoryConsistencyTests(unittest.TestCase):
                 self.assertEqual(match.group(1), full)
                 self.assertIn(source, text)
                 self.assertIn("Author: Lida", text)
+
+    def test_unity_package_folder_matches_the_package_name(self):
+        self.assertIsNotNone(UNITY_NAME_RULE.fullmatch(UNITY_PACKAGE_NAME))
+        folders = {name.split("/")[1] for name in declared() if name.startswith("unity/") and name.count("/") >= 2}
+        self.assertEqual(folders, {UNITY_PACKAGE_NAME}, "unity/ must hold exactly one package folder named like the package")
+        package = json.loads((ROOT / UNITY_PACKAGE / "package.json").read_text(encoding="utf-8"))
+        self.assertEqual(package["name"], UNITY_PACKAGE_NAME)
+        for name in declared():
+            if name.startswith(UNITY_PACKAGE) and name.endswith(".asmdef"):
+                with self.subTest(asmdef=name):
+                    asmdef = json.loads((ROOT / name).read_text(encoding="utf-8"))
+                    self.assertTrue(asmdef["name"].startswith("LidaAngelToon."))
+
+    def test_license_texts_match_the_identifiers_in_use(self):
+        texts = {name for name in declared() if name.startswith("LICENSES/")}
+        self.assertEqual(texts, set(LICENSE_TEXTS.values()))
+        for identifier, name in LICENSE_TEXTS.items():
+            if identifier.startswith("LicenseRef-"):
+                with self.subTest(license=name):
+                    head = (ROOT / name).read_text(encoding="utf-8").splitlines()[:3]
+                    self.assertIn(f"SPDX-License-Identifier: {identifier}", head)
+
+    def test_no_internal_step_names(self):
+        for name in declared():
+            with self.subTest(path=name):
+                found = [m.group(0) for m in STEP_NAME.finditer(name) if not STEP_NAME_ALLOWED.search(m.group(0))]
+                self.assertEqual(found, [], "file path carries an internal step name")
+            if name.endswith(".png") or name.startswith("LICENSES/"):
+                continue
+            text = (ROOT / name).read_text(encoding="utf-8")
+            # The changelog keeps the retired tool names of earlier releases as history.
+            retired = RETIRED_STEP_NAMES_IN_HISTORY if name == "CHANGELOG.md" else set()
+            with self.subTest(file=name):
+                found = sorted({m.group(0) for m in STEP_NAME.finditer(text)
+                                if not STEP_NAME_ALLOWED.search(m.group(0)) and m.group(0) not in retired})
+                self.assertEqual(found, [], "text carries an internal step name")
 
     def test_unity_meta_files_are_complete(self):
         names = set(declared())

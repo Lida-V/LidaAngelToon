@@ -2,6 +2,27 @@
 
 Versions of the repository release. Each release lists the versions of its parts.
 
+## [0.2.1] - 2026-10-17
+
+Parts: Blender add-on 0.1.0 (unchanged), Unity package `com.github.lida-v.lidaangeltoon` 0.1.0 (renamed),
+Unreal Engine files 0.1.0 (unchanged code).
+
+- Documentation: Japanese / English answers about colour management, shadows, hair highlights, outlines,
+  transparency and character consistency across shots, with an adjustment order and explicit implementation limits.
+  Linked from the README and colour notes; included in the source, Unity and Unreal Engine ZIPs.
+- Unity package name: `jp.lida.angeltoon` -> `com.github.lida-v.lidaangeltoon`; the package folder has the same
+  name. The code, the shader names and the Unity asset GUIDs are the same; remove an old
+  `Packages/jp.lida.angeltoon` folder before adding the new one.
+- License: Lida Attribution License 1.1 (SPDX `LicenseRef-Lida-Attribution-1.1`) for the Unity, Unreal Engine and
+  core files, the documents and the images; 1.1 names shader code explicitly in clause 1 and is otherwise the same
+  as 1.0. The Python code of the Blender add-on stays GPL-3.0-or-later. Copies distributed under the Lida
+  Attribution License 1.0 (v0.1.0, v0.2.0) stay under 1.0.
+- Tool names: `core/scripts/core338.py` -> `core/scripts/core_reference.py`, `core/scripts/make_ue_custom338.py` ->
+  `core/scripts/make_ue_custom.py`; comments that named internal steps now name the files of this repository.
+  Behaviour is unchanged.
+- Tests: the repository test also checks that the Unity package folder matches its package name, that `LICENSES/`
+  holds only the license texts in use, and that no file or path carries an internal step name.
+
 ## [0.2.0] - 2026-10-15
 
 Parts: Blender add-on 0.1.0 (unchanged), Unity package `jp.lida.angeltoon` 0.1.0 (new), Unreal Engine files 0.1.0 (new).

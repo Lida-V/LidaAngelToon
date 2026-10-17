@@ -1,7 +1,7 @@
 // ============================================================================
 // LidaAngelToonInput.hlsl  -  LidaAngelToon for Unity URP: material, texture and global inputs
 //
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 //
 // Copyright (c) 2026 Lida
 // ============================================================================

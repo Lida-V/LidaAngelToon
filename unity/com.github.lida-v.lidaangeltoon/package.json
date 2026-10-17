@@ -1,5 +1,5 @@
 {
-  "name": "jp.lida.angeltoon",
+  "name": "com.github.lida-v.lidaangeltoon",
   "version": "0.1.0",
   "displayName": "LidaAngelToon",
   "description": "Soft two-step toon shader for URP (LidaAngelToon/Toon, LidaAngelToon/Toon Transparent): two soft shade steps, baked occlusion mask, rim, soft specular, MatCap, two-layer materials, highlight roll-off and an inverted-hull outline whose width is kept between a minimum and a maximum number of screen pixels. The shading core is shared with the Unreal Engine version.",
@@ -20,5 +20,5 @@
     "name": "Lida",
     "url": "https://github.com/Lida-V/LidaAngelToon"
   },
-  "license": "LicenseRef-Lida-Attribution-1.0"
+  "license": "LicenseRef-Lida-Attribution-1.1"
 }
