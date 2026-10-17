@@ -1,6 +1,6 @@
 // LidaAngelToon - Unreal Engine Custom node body. GENERATED from LidaAngelToonCore.hlsl
-// by scripts/make_ue_custom338.py. Do not edit by hand: edit the core and regenerate.
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// by core/scripts/make_ue_custom.py. Do not edit by hand: edit the core and regenerate.
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 // Copyright (c) 2026 Lida
 // Output type: CMOT Float 3 (linear emissive colour; plug into Emissive Color of an Unlit material).
 // Inputs (add these pins with exactly these names):

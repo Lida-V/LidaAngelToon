@@ -1,5 +1,5 @@
 // LidaAngelToon - Unreal Engine Custom node body (small helper, written by lidaangeltoon_ue_build.py).
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 // Copyright (c) 2026 Lida
 // LidaAngelToon: N.L with the key-light shadow (Unlit in Unreal: no shadow map, Atten = 1)
 float l2 = dot(Lw, Lw);

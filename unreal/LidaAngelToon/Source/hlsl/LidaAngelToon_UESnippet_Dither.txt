@@ -1,5 +1,5 @@
 // LidaAngelToon - Unreal Engine Custom node body (small helper, written by lidaangeltoon_ue_build.py).
-// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.0
+// SPDX-License-Identifier: LicenseRef-Lida-Attribution-1.1
 // Copyright (c) 2026 Lida
 // LidaAngelToon: alpha for Masked instances. Dither = 1: keep a pixel when alpha > per-frame noise (TSR averages it,
 // like Blender "Dithered"); Dither = 0: plain cut-out at Cutoff.
