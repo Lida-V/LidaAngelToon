@@ -6,7 +6,7 @@ Blender で決めたトゥーンの見た目（ノードグループ `LidaSoftTo
 
 - シェーダーの名前：Unity `LidaAngelToon/Toon`・`LidaAngelToon/Toon Transparent`、UE `M_LidaAngelToon`・`M_LidaAngelToon_Outline`・`MPC_LidaAngelToon`。Blender のノードグループは `LidaSoftToon` のまま（名前は変えない。中身はこの仕様の式と同じ）。
 - シェーダーの文は自分で書いたものだけ。キャラクターの材質の名前・値・画像・パスはシェーダーの文に入れず、材質（Unity の材質・プリセット、UE のマテリアルインスタンス）の側に置く。
-- ライセンス：Lida Attribution License 1.0（各ファイルの頭の SPDX `LicenseRef-Lida-Attribution-1.0`）。Blender アドオン（`blender/`）だけ GPL-3.0-or-later。
+- ライセンス：Lida Attribution License 1.1（各ファイルの頭の SPDX `LicenseRef-Lida-Attribution-1.1`）。Blender アドオン（`blender/`）だけ GPL-3.0-or-later。
 
 ---
 
@@ -15,11 +15,11 @@ Blender で決めたトゥーンの見た目（ノードグループ `LidaSoftTo
 | ファイル | 中身 |
 |---|---|
 | `core/LidaAngelToonCore.hlsl` | **共通の式**（純粋な関数。Unity は include、UE は下の Custom ノードの文）。文字は ASCII だけ（13 の地雷） |
-| `core/scripts/core338.py` | 同じ式の Python（numpy）。HLSL と行ごとに `[S01]`〜`[S24]` で対応 |
-| `core/scripts/make_ue_custom338.py` | core から UE の Custom ノードの文を作る |
+| `core/scripts/core_reference.py` | 同じ式の Python（numpy）。HLSL と行ごとに `[S01]`〜`[S24]` で対応 |
+| `core/scripts/make_ue_custom.py` | core から UE の Custom ノードの文を作る |
 | `unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt` | UE の Custom ノードに貼る文（色を返す）。手で直さない |
 | `unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_OutlineWidth.txt` | UE の輪郭線の押し出し量（cm）を返す Custom ノードの文 |
-| `unity/jp.lida.angeltoon/` | Unity のパッケージ |
+| `unity/com.github.lida-v.lidaangeltoon/` | Unity のパッケージ |
 | `unreal/LidaAngelToon/Python/` | UE の資産を作る Python |
 
 ---
@@ -192,7 +192,7 @@ Blender は 1 つ目の組と 2 つ目の組を**別々に最後（寄せ）ま�
 ## 13. Unity・UE で使うときの注意（地雷）
 
 - **シェーダーの文は ASCII だけにする**。日本語のコメントがあると dxc が「0x80070459（文字の変換ができない）」で止まった（UE の DXC も同じ扱いになる見込み）。文の説明はこの文書に書く。
-- UE の Custom ノードは関数の中に貼られるので、関数は「関数を持つ構造体」の中に入れてある（生成した文をそのまま貼る）。コアを直したら `python -I core/scripts/make_ue_custom338.py . unreal/LidaAngelToon/Source/hlsl dist/ue_custom_check.hlsl`（リポジトリの場所で）で作り直す。
+- UE の Custom ノードは関数の中に貼られるので、関数は「関数を持つ構造体」の中に入れてある（生成した文をそのまま貼る）。コアを直したら `python -I core/scripts/make_ue_custom.py . unreal/LidaAngelToon/Source/hlsl dist/ue_custom_check.hlsl`（リポジトリの場所で）で作り直す。
 - UE は cm。mm の値は ×0.1。
 - テクスチャ：基本色・影の画像・MatCap は sRGB、マスクと毛筋の画像はリニア。MatCap は端をクランプ。
 - 2 層の材質は 2 回計算して混ぜる（値を混ぜない）。

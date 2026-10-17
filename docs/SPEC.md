@@ -14,8 +14,8 @@ The Blender node group keeps its name `LidaSoftToon`; its math is the math below
 | File | Content |
 |---|---|
 | `core/LidaAngelToonCore.hlsl` | the shared formula as pure functions (Unity includes it; Unreal uses generated Custom-node text). ASCII only |
-| `core/scripts/core338.py` | the same formula in numpy, step tags `[S01]`..`[S24]` shared with the HLSL |
-| `core/scripts/make_ue_custom338.py` | generates the Unreal Custom-node text from the core |
+| `core/scripts/core_reference.py` | the same formula in numpy, step tags `[S01]`..`[S24]` shared with the HLSL |
+| `core/scripts/make_ue_custom.py` | generates the Unreal Custom-node text from the core |
 | `unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_Shade.txt` | Custom-node body that returns the colour (do not edit by hand) |
 | `unreal/LidaAngelToon/Source/hlsl/LidaAngelToon_UECustom_OutlineWidth.txt` | Custom-node body that returns the outline push length (cm) |
 
@@ -183,7 +183,7 @@ Unreal mean 1.9 to 3.2 (Unreal receives no cast shadows).
 - **Keep shader source ASCII.** DXC stopped with 0x80070459 on Japanese comments (Unreal's DXC is expected to do the
   same). Explanations live in the documents.
 - Unreal pastes a Custom node inside a function, so the core's functions are members of a local struct in the
-  generated text. Regenerate after any change of the core: `python -I core/scripts/make_ue_custom338.py <package root>`.
+  generated text. Regenerate after any change of the core: `python -I core/scripts/make_ue_custom.py <repository root>`.
 - Unreal works in cm: mm values x 0.1.
 - Base, shade and MatCap textures are sRGB; the mask and other data textures are linear. MatCap clamps at the edges.
 - Two-layer materials: shade twice and mix (do not mix the values).

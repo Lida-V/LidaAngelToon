@@ -1,5 +1,9 @@
 # Colour spaces, tone mapping and the comparison set-up
 
+For a practical adjustment order and a Japanese / English answer about keeping a character consistent across
+engines and film shots, see [Cross-engine appearance and shot consistency](CROSS-ENGINE-LOOK.md). Fixed exposure
+and a disabled tone curve below are comparison conditions; the final scene may use its own lighting and grade.
+
 LidaAngelToon computes everything in **linear** colour and returns a linear emission colour **before** bloom and tone
 mapping. The reference look is Blender with the view transform **"Standard"** (no tone curve, sRGB display, exposure 0,
 gamma 1, look None). White-clipping is handled inside the shader by Highlight Knee, not by a tone curve.
